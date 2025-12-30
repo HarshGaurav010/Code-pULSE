@@ -1,143 +1,161 @@
-const API_URL = "http://localhost:3000";
+// ================================
+// 🔗 BACKEND BASE URL (CHANGE ONLY THIS)
+// ================================
+const API_BASE = "https://code-pulse-2.onrender.com";
+
+// ================================
+// GLOBAL STATE
+// ================================
 let currentRole = "";
 let resources = [];
-let bookings = [];
 
-/* LOGIN */
+// ================================
+// LOGIN / LOGOUT
+// ================================
 function login() {
-    currentRole = document.getElementById("role").value;
-    document.getElementById("loginSection").classList.add("hidden");
-    document.getElementById("appSection").classList.remove("hidden");
-    loadDashboard();
-    loadRolePanels();
+  currentRole = document.getElementById("role").value;
+
+  document.getElementById("loginSection").classList.add("hidden");
+  document.getElementById("appSection").classList.remove("hidden");
+
+  showPage("dashboard");
+
+  if (currentRole === "admin") {
+    document.getElementById("adminPanel").classList.remove("hidden");
+  }
+  if (currentRole === "faculty") {
+    document.getElementById("facultyPanel").classList.remove("hidden");
+  }
+  if (currentRole === "student") {
+    document.getElementById("studentPanel").classList.remove("hidden");
+  }
+
+  loadResources();
 }
 
-/* DASHBOARD */
-async function loadDashboard() {
-    const res = await fetch(`${API_URL}/api/resources`);
-    resources = await res.json();
-
-    let list = document.getElementById("resourceList");
-    list.innerHTML = "";
-
-    resources.forEach(r => {
-        list.innerHTML += `<li>${r.name} (${r.type})</li>`;
-    });
-
-    // Populate booking dropdown
-    let select = document.getElementById("resourceSelect");
-    select.innerHTML = "";
-    resources.forEach(r => {
-        select.innerHTML += `<option value="${r.id}">${r.name}</option>`;
-    });
-}
-
-/* BOOK RESOURCE */
-async function bookResource() {
-    const resourceId = document.getElementById("resourceSelect").value;
-    const date = document.getElementById("date").value;
-    const start = document.getElementById("startTime").value;
-    const end = document.getElementById("endTime").value;
-
-    const response = await fetch(`${API_URL}/api/bookings`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ resourceId: Number(resourceId), date, start, end, role: currentRole })
-    });
-
-    const data = await response.json();
-    document.getElementById("bookingMessage").innerText =
-        response.ok ? "✅ Booking Successful!" : "❌ " + data.message;
-
-    loadRolePanels();
-}
-
-/* ROLE PANELS */
-async function loadRolePanels() {
-    hideAllRolePanels();
-
-    const res = await fetch(`${API_URL}/api/bookings`);
-    bookings = await res.json();
-
-    if (currentRole === "admin") {
-        document.getElementById("adminPanel").classList.remove("hidden");
-        loadAllBookings();
-    }
-    if (currentRole === "faculty") {
-        document.getElementById("facultyPanel").classList.remove("hidden");
-        loadFacultyBookings();
-    }
-    if (currentRole === "student") {
-        document.getElementById("studentPanel").classList.remove("hidden");
-        loadStudentBookings();
-    }
-}
-
-function hideAllRolePanels() {
-    document.querySelectorAll("#adminPanel, #facultyPanel, #studentPanel")
-        .forEach(p => p.classList.add("hidden"));
-}
-
-/* ADMIN VIEW */
-function loadAllBookings() {
-    const list = document.getElementById("allBookings");
-    list.innerHTML = "";
-
-    bookings.forEach(b => {
-        const resource = resources.find(r => r.id === b.resourceId)?.name || "Unknown";
-        list.innerHTML += `<li>${resource} | ${b.role} | ${b.date} | <button onclick="cancelBooking(${b.id})">Cancel</button></li>`;
-    });
-}
-
-/* FACULTY VIEW */
-function loadFacultyBookings() {
-    const list = document.getElementById("facultyBookings");
-    list.innerHTML = "";
-
-    bookings.filter(b => b.role === "faculty").forEach(b => {
-        const resource = resources.find(r => r.id === b.resourceId)?.name || "Unknown";
-        list.innerHTML += `<li>${resource} on ${b.date} <button onclick="cancelBooking(${b.id})">Cancel</button></li>`;
-    });
-}
-
-/* STUDENT VIEW */
-function loadStudentBookings() {
-    const list = document.getElementById("studentBookings");
-    list.innerHTML = "";
-
-    bookings.filter(b => b.role === "student").forEach(b => {
-        const resource = resources.find(r => r.id === b.resourceId)?.name || "Unknown";
-        list.innerHTML += `<li>${resource} on ${b.date} <button onclick="cancelBooking(${b.id})">Cancel</button></li>`;
-    });
-}
-
-/* CANCEL BOOKING */
-async function cancelBooking(id) {
-    await fetch(`${API_URL}/api/bookings/${id}`, { method: "DELETE" });
-    loadRolePanels();
-}
-
-/* LOGOUT */
 function logout() {
-    location.reload();
+  location.reload();
 }
 
-/* PAGE NAVIGATION */
-function showPage(page) {
-    document.querySelectorAll(".page").forEach(p => p.classList.add("hidden"));
-    document.getElementById(page).classList.remove("hidden");
+// ================================
+// PAGE NAVIGATION
+// ================================
+function showPage(pageId) {
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.add("hidden");
+  });
+
+  document.getElementById(pageId).classList.remove("hidden");
 }
 
-/* ADMIN ADD RESOURCE */
+// ================================
+// LOAD RESOURCES (DASHBOARD + BOOKING)
+// ================================
+function loadResources() {
+  fetch(`${API_BASE}/resources`)
+    .then(res => res.json())
+    .then(data => {
+      resources = data;
+      renderResources();
+      populateResourceSelect();
+    })
+    .catch(err => console.error("Error loading resources:", err));
+}
+
+function renderResources() {
+  const list = document.getElementById("resourceList");
+  list.innerHTML = "";
+
+  resources.forEach(r => {
+    const li = document.createElement("li");
+    li.textContent = `${r.name} (${r.type})`;
+    list.appendChild(li);
+  });
+}
+
+function populateResourceSelect() {
+  const select = document.getElementById("resourceSelect");
+  select.innerHTML = "";
+
+  resources.forEach(r => {
+    const option = document.createElement("option");
+    option.value = r.id;
+    option.textContent = r.name;
+    select.appendChild(option);
+  });
+}
+
+// ================================
+// BOOK RESOURCE
+// ================================
+function bookResource() {
+  const resourceId = document.getElementById("resourceSelect").value;
+  const date = document.getElementById("date").value;
+  const startTime = document.getElementById("startTime").value;
+  const endTime = document.getElementById("endTime").value;
+
+  fetch(`${API_BASE}/bookings`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      resourceId,
+      date,
+      startTime,
+      endTime,
+      role: currentRole
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("bookingMessage").textContent =
+        "✅ Resource booked successfully!";
+    })
+    .catch(err => {
+      document.getElementById("bookingMessage").textContent =
+        "❌ Booking failed";
+      console.error(err);
+    });
+}
+
+// ================================
+// SEARCH RESOURCE
+// ================================
+function searchResource() {
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  const resultList = document.getElementById("searchResult");
+  resultList.innerHTML = "";
+
+  const filtered = resources.filter(r =>
+    r.name.toLowerCase().includes(query)
+  );
+
+  filtered.forEach(r => {
+    const li = document.createElement("li");
+    li.textContent = `${r.name} (${r.type})`;
+    resultList.appendChild(li);
+  });
+}
+
+// ================================
+// ADMIN: ADD RESOURCE
+// ================================
 function adminAddResource() {
-    const name = document.getElementById("newResourceName").value;
-    const type = document.getElementById("newResourceType").value;
+  const name = document.getElementById("newResourceName").value;
+  const type = document.getElementById("newResourceType").value;
 
-    if (!name) return alert("Enter resource name");
-
-    const newId = resources.length ? Math.max(...resources.map(r=>r.id))+1 : 1;
-    resources.push({ id: newId, name, type });
-
-    loadDashboard();
-    alert("Resource Added Successfully");
+  fetch(`${API_BASE}/resources`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ name, type })
+  })
+    .then(res => res.json())
+    .then(() => {
+      document.getElementById("newResourceName").value = "";
+      loadResources();
+    })
+    .catch(err => console.error("Error adding resource:", err));
 }

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campus Resource Optimizer</title>
+<link rel="stylesheet" href="Front.css">
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<section id="loginSection">
+    <header>
+        <h1>Campus Ease!</h1>
+        <p>Smart Campus Resource Management System</p>
+    </header>
+
+    <div class="loginBox">
+        <h2>Login</h2>
+        <select id="role">
+            <option value="admin">Admin</option>
+            <option value="faculty">Faculty</option>
+            <option value="student">Student</option>
+        </select>
+        <button onclick="login()">Login</button>
+    </div>
+</section>
+
+<!-- MAIN APP -->
+<section id="appSection" class="hidden">
+
+<nav>
+    <button onclick="showPage('dashboard')">Dashboard</button>
+    <button onclick="showPage('booking')">Book Resource</button>
+    <button onclick="showPage('search')">Search</button>
+    <button onclick="showPage('reports')">Reports</button>
+    <button onclick="logout()">Logout</button>
+</nav>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="page">
+    <h2>Dashboard</h2>
+    <ul id="resourceList"></ul>
+</div>
+
+<!-- BOOKING -->
+<div id="booking" class="page hidden">
+    <h2>Book a Resource</h2>
+    <label>Resource</label>
+    <select id="resourceSelect"></select>
+    <label>Date</label>
+    <input type="date" id="date">
+    <label>Start Time</label>
+    <input type="time" id="startTime">
+    <label>End Time</label>
+    <input type="time" id="endTime">
+    <button onclick="bookResource()">Book</button>
+    <p id="bookingMessage"></p>
+</div>
+
+<!-- SEARCH -->
+<div id="search" class="page hidden">
+    <h2>Search Resources</h2>
+    <input type="text" id="searchInput" placeholder="Search resource">
+    <button onclick="searchResource()">Search</button>
+    <ul id="searchResult"></ul>
+</div>
+
+<!-- REPORTS -->
+<div id="reports" class="page hidden">
+    <h2>Utilization Reports</h2>
+    <p id="reportData"></p>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="page hidden">
+    <h2>Admin Panel</h2>
+    <h3>Add Resources</h3>
+    <input type="text" id="newResourceName" placeholder="Resource Name">
+    <select id="newResourceType">
+        <option>Room</option>
+        <option>Equipment</option>
+        <option>Book</option>
+    </select>
+    <button onclick="adminAddResource()">Add Resource</button>
+
+    <h3>All Bookings</h3>
+    <ul id="allBookings"></ul>
+</div>
+
+<!-- FACULTY PANEL -->
+<div id="facultyPanel" class="page hidden">
+    <h2>Faculty Bookings</h2>
+    <ul id="facultyBookings"></ul>
+</div>
+
+<!-- STUDENT PANEL -->
+<div id="studentPanel" class="page hidden">
+    <h2>Student Bookings</h2>
+    <ul id="studentBookings"></ul>
+</div>
+
+<footer>
+    <p>@ CODE PULSE</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

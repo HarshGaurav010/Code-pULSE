@@ -1,0 +1,179 @@
+/* GENERAL STYLES */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background: #8abec7;
+    color: #333;
+}
+
+header {
+    background: #012346;
+    color: #eff05c;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+h1, h2, h3 {
+    margin: 0.5em 0;
+}
+
+/* LOGIN PAGE */
+.loginBox {
+    background: #ffffffdd;
+    max-width: 350px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+.loginBox select, 
+.loginBox button {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.loginBox button {
+    background: #1976d2;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.loginBox button:hover {
+    background: #0d47a1;
+}
+
+/* NAVIGATION */
+nav {
+    background: #d7f763;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+nav button {
+    background: #012346;
+    color: #eff05c;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+nav button:hover {
+    background: #0d2a5a;
+}
+
+/* SECTIONS */
+section, .page {
+    padding: 20px;
+    max-width: 900px;
+    margin: 20px auto;
+    background: #ffffffdd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.hidden {
+    display: none;
+}
+
+/* INPUTS & BUTTONS */
+input, select, button {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background: #1976d2;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #0d47a1;
+}
+
+/* LISTS */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: #f7f0d4;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* CANCEL BUTTONS */
+li button {
+    background: #e53935;
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+li button:hover {
+    background: #b71c1c;
+}
+
+/* FOOTER */
+footer {
+    background: #ffffff;
+    text-align: center;
+    padding: 15px;
+    margin-top: 20px;
+    border-top: 1px solid #ccc;
+}
+
+/* REPORT DATA */
+#reportData {
+    background: #e0f7fa;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* ADMIN PANEL */
+#adminPanel input, #adminPanel select, #adminPanel button {
+    width: 50%;
+    margin: 5px 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    nav {
+        flex-direction: column;
+    }
+
+    .loginBox, section, .page {
+        width: 90%;
+        margin: 20px auto;
+    }
+}
+
